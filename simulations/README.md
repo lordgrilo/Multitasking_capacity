@@ -1,0 +1,1 @@
+This code represents an attempt to optimize the training and testing of a multitasking feed forward neural network. The first commit of the repo represents the code in its initial state as provided by Sebastian Musslick.
