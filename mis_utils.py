@@ -4,11 +4,11 @@ import numpy as np
 
 ####### analytical functions for Gaussian degree distributions 
 def attempt_scipy_func_gauss(x, d,sigma, c):
-    return np.abs(x - np.power(1 - ((sigma*sigma*np.log(x)+d)/float(x*d)) * np.exp((d*np.log(x) + 0.5*sigma*sigma*np.power(np.log(x),2))), c-1));
+    return np.abs(x - np.power(1 - ((sigma*sigma*np.log(x)+d)/float(d*x)) * np.exp((d*np.log(x) + 0.5*sigma*sigma*np.power(np.log(x),2))), c-1));
 
 
 def minimize_gauss_pstar(xs, d, sigma, c):
-    vals = map(lambda x: attempt_scipy_func_gauss(x, d, sigma, c), xs);
+    vals = list(map(lambda x: attempt_scipy_func_gauss(x, d, sigma, c), xs));
     x0 = (np.min(vals), xs[np.nanargmin(vals)])
     return x0[1]
 
@@ -26,7 +26,6 @@ def gaussian_prediction(ps,sigmas,xs=None,c=2):
         p_stars_gauss = minimize_gauss_pstar(xs, d , sigmas[i], c);
         rho_stars_gauss.append(rho_gauss(p_stars_gauss, d , sigmas[i], c));
     return rho_stars_gauss;
-
 
 ####### analytical functions for gamma degree distributions 
 def attempt_scipy_func_gamma(x, gamma,  theta, c):
@@ -78,4 +77,20 @@ def rho_generic(x,d,pk,c):
     Mprime = eval_genfunc_prime(pk,np.log(x));
     mod = M - Mprime;
     return (d/c)  * (1 - np.power(x,c/float(c-1))) + mod;
+
+
+###### UTILS #####
+def plot_results(x,data,norm=None,label=None,marker='s'):
+    yy = list(map(lambda x: np.mean(data[x]), sorted(data.keys())));
+    std_yy = list(map(lambda x: np.std(data[x]), sorted(data.keys())));
+    plt.gca()
+    if norm==None:
+        plt.errorbar(x, np.array(yy), np.array(std_yy), fmt=marker,ms=10,alpha=0.6, label=label);
+    else:
+        plt.errorbar(x, np.array(yy)/float(norm), np.array(std_yy)/float(norm), fmt=marker,ms=10,alpha=0.6, label=label);
+    return;
+
+
+
+
 
