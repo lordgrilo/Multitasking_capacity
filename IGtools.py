@@ -94,7 +94,7 @@ def create_blist(alist):
 
 def create_BA_bipartite_graph(N,m):
     g = nx.barabasi_albert_graph(N,m);
-    alist =list(dist(g.degree()).values())
+    alist =list(dict(g.degree()).values())
     blist = create_blist(alist)
     return nx.bipartite.configuration_model(alist,blist,seed=int(time.time()));
 
@@ -406,14 +406,13 @@ def relabel_with_integers(g, return_dict=False):
     else:
         return nx.relabel_nodes(g,new_nodes);
         
- 
 def mis_check(g,nodes):
     neighbors = set.union(*[set(g.neighbors(v)) for v in nodes])
     if set.intersection(neighbors, nodes):
         return 0;
     else:
         return 1;
-   
+    
 def generate_graph_instance(G):
     import networkx as nx;
     from random import random;
